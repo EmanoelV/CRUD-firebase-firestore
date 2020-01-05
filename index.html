@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CRUD Firestore</title>
+</head>
+    <body>
+        <div>
+            <h1>Html de exemplo, teste os comandos com o console do navegador apertando F12</h1>
+            <h2>Você precisará fornecer dados do seu firebase na variavel firebaseConfig</h2>
+        </div>
+
+
+
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+            https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-firestore.js"></script>
+
+        <script>
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyDqCqJg7yG-gnFqQ5Wo9MHDlTllCDyfAqM",
+                authDomain: "projetodetestes-2357.firebaseapp.com",
+                databaseURL: "https://projetodetestes-2357.firebaseio.com",
+                projectId: "projetodetestes-2357",
+                storageBucket: "projetodetestes-2357.appspot.com",
+                messagingSenderId: "332035850267",
+                appId: "1:332035850267:web:06d8c408296553c1"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            var db = firebase.firestore();
+        </script>
+
+        <script src="./index.js"></script>
+
+        <!--Cooque seus scipts abaixo-->
+
+
+    </body>
+</html>
