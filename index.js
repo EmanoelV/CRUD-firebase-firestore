@@ -1,7 +1,11 @@
 class Crud {
-    creat = (collection, dates, id) => {
+    constructor(collection) {
+        this.collection = collection
+    }
+
+    create = (data, id) => {
         function load(resolve, reject) {
-            db.collection(collection).doc(id).set(dates)
+            db.collection(this.collection).doc(id).set(data)
             .then( () => {
                 console.log("Dados criados")
                 resolve(true)
@@ -14,9 +18,9 @@ class Crud {
         return new Promise(load)
     }
 
-    update = (collection, id, dates) => {
+    update = (id, data) => {
         function load(resolve, reject) {
-            db.collection(collection).doc(id).update(dates)
+            db.collection(this.collection).doc(id).update(data)
             .then(() => {
                 console.log("Dados atualizados")
                 resolve(true)
@@ -29,9 +33,9 @@ class Crud {
         return new Promise(load)
     }
 
-    delete = (collection, id) => {
+    delete = (id) => {
         function load(resolve, reject) {
-            db.collection(collection).doc(id).delete()
+            db.collection(this.collection).doc(id).delete()
             .then(() => {
                 console.log("Dados deletados")
                 resolve(true)
@@ -57,9 +61,11 @@ class Crud {
     }
 
     read = {
-        all: (collection, limit=1000) => {
+        all: (limit=1000) => {
+            let collection = this.collection
             let processResp = this.processResp
             function load(resolve, reject) {
+                //console.log(this.collection)
                 db.collection(collection).limit(limit).get()
                 .then((res) => {
                     resolve(processResp(res))
@@ -71,10 +77,11 @@ class Crud {
             return new Promise(load)
         },
 
-        search: (collection, element, operator, search, limit=1000) => {
+        search: (key, operator, value, limit=1000) => {
             let processResp = this.processResp
+            let collection = this.collection
             function load(resolve, reject) {
-                db.collection(collection).where(element, operator, search).limit(limit).get()
+                db.collection(collection).where(key, operator, value).limit(limit).get()
                 .then( (res) => resolve( processResp(res) ) )
                 .catch((error) => {
                     reject(error)
@@ -83,9 +90,9 @@ class Crud {
             return new Promise(load)
         },
         
-        id: (collection, id) => {
+        id: (id) => {
             function load(resolve, reject) {
-                db.collection(collection).doc(id).get()
+                db.collection(this.collection).doc(id).get()
                 .then( (res) => {
                     if ( res.exists ) {
                         resolve( res.data() )
@@ -102,8 +109,6 @@ class Crud {
     }  
 }
 
-
-const crud = new Crud
 const arrayAdd = (elem) => firebase.firestore.FieldValue.arrayUnion(elem)
 const arrayRemove = (elem) => firebase.firestore.FieldValue.arrayRemove(elem)
 const increment = (number) => firebase.firestore.FieldValue.increment(number)
