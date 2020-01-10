@@ -1,114 +1,76 @@
+function loadScript(url) {
+    fetch(url).then((res) => console.log(res))
+}
+
 class Crud {
     constructor(collection) {
         this.collection = collection
     }
 
-    create = (data, id) => {
-        function load(resolve, reject) {
-            db.collection(this.collection).doc(id).set(data)
-            .then( () => {
-                console.log("Dados criados")
-                resolve(true)
-            })
-            .catch( (error) => {
-                console.log("Erro ao criar: ", error)
-                reject(false)
-            })
-        }
-        return new Promise(load)
-    }
-
-    update = (id, data) => {
-        function load(resolve, reject) {
-            db.collection(this.collection).doc(id).update(data)
-            .then(() => {
-                console.log("Dados atualizados")
-                resolve(true)
-            })
-            .catch((error) => {
-                console.log("Erro ao atualizar", error)
-                reject(false)
-            })
-        }
-        return new Promise(load)
-    }
-
-    delete = (id) => {
-        function load(resolve, reject) {
-            db.collection(this.collection).doc(id).delete()
-            .then(() => {
-                console.log("Dados deletados")
-                resolve(true)
-            })
-            .catch((error) => {
-                console.log("Erro ao deletar", error)
-                reject(false)
-            })
-        }
-        return new Promise(load)
+    load(func) {
+        return(
+            (resolve, reject) => {
+                func.then((res) => {
+                    if(res != undefined) {
+                        resolve( this.processResp(res) )
+                    }
+                    resolve(res)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+            }
+        )
     }
 
     processResp(res) {
-        let date = []
+        if (res.data) {
+            return res.data()
+        }
+        let data = []
         let temp
         res.forEach((doc) => {
             temp = doc.data()
             temp.id = doc.id
-            date.push(temp)
+            data.push(temp)
         })
-        console.log(date)
-        return date
+        return data
+    }
+
+    create (id, data) {
+        let func = db.collection(this.collection).doc(id).set(data)
+        return new Promise(this.load(func))
+    }
+
+    update(id, data) {
+        let func = db.collection(this.collection).doc(id).update(data)
+        return new Promise(this.load(func))
+    }
+
+    delete(id) {
+        let func = db.collection(this.collection).doc(id).delete()
+        return new Promise(this.load(func))
     }
 
     read = {
         all: (limit=1000) => {
-            let collection = this.collection
-            let processResp = this.processResp
-            function load(resolve, reject) {
-                //console.log(this.collection)
-                db.collection(collection).limit(limit).get()
-                .then((res) => {
-                    resolve(processResp(res))
-                })
-                .catch((error) => {
-                    reject(error)
-                })
-            }
-            return new Promise(load)
+            let func = db.collection(this.collection).limit(limit).get()
+            return new Promise(this.load(func))
         },
 
         search: (key, operator, value, limit=1000) => {
-            let processResp = this.processResp
-            let collection = this.collection
-            function load(resolve, reject) {
-                db.collection(collection).where(key, operator, value).limit(limit).get()
-                .then( (res) => resolve( processResp(res) ) )
-                .catch((error) => {
-                    reject(error)
-                })                
-            }
-            return new Promise(load)
+            let func = db.collection(this.collection).where(key, operator, value).limit(limit).get()
+            return new Promise(this.load(func))
         },
         
         id: (id) => {
-            function load(resolve, reject) {
-                db.collection(this.collection).doc(id).get()
-                .then( (res) => {
-                    if ( res.exists ) {
-                        resolve( res.data() )
-                    } else {
-                        reject("Não existe")
-                    }
-                })
-                .catch((error) => {
-                    reject(error)
-                })
-            }
-            return new Promise(load)
+            let func = db.collection(this.collection).doc(id).get()
+            return new Promise(this.load(func))
         }
     }  
 }
 
+const db = firebase.firestore()
 const arrayAdd = (elem) => firebase.firestore.FieldValue.arrayUnion(elem)
 const arrayRemove = (elem) => firebase.firestore.FieldValue.arrayRemove(elem)
 const increment = (number) => firebase.firestore.FieldValue.increment(number)
