@@ -4,7 +4,7 @@ ela possui todos os métodos de um CRUD: Creat, Read, Update e Delete
 
 Use o arquivo html fornecido aqui para testar os métodos no console do navegador, você pode abrir o console apertando F12 quando estiver com a página aberta no navegador
 
-obs: Os dados são em forma de JSON, exemplo: var dates = {nome: "fulano", idade: 17}
+obs: Os dados são em forma de JSON, exemplo: var data = {nome: "fulano", idade: 17}
 
 # Um script de exemplo com todos os método disponíveis:
     
