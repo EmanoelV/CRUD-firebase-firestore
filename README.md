@@ -1,6 +1,8 @@
 # CRUD-firebase-firestore
+Script feito com o principal intuito deocnhecer melhor o firebase/firestore
+
 Uma simples e pequena biblioteca para agilizar no desenvolvimentos de aplicações que necessitem se comunicar com o firestore do firebase,
-ela possui todos os métodos de um CRUD: Creat, Read, Update e Delete
+ela possui todos os métodos de um CRUD: Creat, Read, Update e Delete.
 
 Use o arquivo html fornecido aqui para testar os métodos no console do navegador, você pode abrir o console apertando F12 quando estiver com a página aberta no navegador
 
